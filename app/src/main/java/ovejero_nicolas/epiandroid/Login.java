@@ -9,8 +9,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,19 +51,6 @@ public class Login extends AppCompatActivity {
 
     private boolean CheckConnexion(String login, String pass)
     {
-        try {
-            URL url = new URL("http://www.epitech.eu/");
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally{
-            urlConnection.disconnect();
-        }
-
         return true;
     }
 
@@ -70,6 +60,7 @@ public class Login extends AppCompatActivity {
         EditText pass = (EditText) findViewById(R.id.PassInput);
         String loginx = login.getText().toString();
         String password = pass.getText().toString();
+        CheckConnexion("ovejer_n", "n1JjiJYN");
         Toast.makeText(this, loginx + " " + password, Toast.LENGTH_LONG).show();
     }
 }
