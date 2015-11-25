@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:id="@+id/gd">
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/imgAvatar"
+        android:layout_width="115dp"
+        android:layout_height="115dp"
+        android:scaleType="centerCrop"
+        android:layout_row="1"
+        android:layout_rowSpan="4" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Nicolas Ovejero"
+        android:id="@+id/title"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_columnSpan="3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/login"
+        android:id="@+id/textView2"
+        android:layout_row="1"
+        android:layout_column="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Login_x"
+        android:id="@+id/login"
+        android:layout_row="1"
+        android:layout_column="2"
+        android:paddingRight="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/mail"
+        android:id="@+id/textView3"
+        android:layout_row="2"
+        android:layout_column="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Mail"
+        android:id="@+id/mail"
+        android:layout_row="2"
+        android:layout_column="2"
+        android:paddingRight="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/semester"
+        android:id="@+id/semester"
+        android:layout_row="3"
+        android:layout_column="1"
+        android:paddingRight="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="B5"
+        android:id="@+id/semestre"
+        android:layout_row="3"
+        android:layout_column="2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/year"
+        android:id="@+id/textView"
+        android:layout_row="4"
+        android:layout_column="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="2015"
+        android:id="@+id/textView4"
+        android:layout_row="4"
+        android:layout_column="2" />
+
+</GridLayout>
