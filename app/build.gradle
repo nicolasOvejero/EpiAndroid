@@ -24,6 +24,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-    compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
     compile project(':volley')
+    compile 'org.immutables:gson:2.1.0'
 }

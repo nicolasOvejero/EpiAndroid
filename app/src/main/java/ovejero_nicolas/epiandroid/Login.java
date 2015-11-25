@@ -1,25 +1,28 @@
 package ovejero_nicolas.epiandroid;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Login extends AppCompatActivity {
+
+    private String login;
+    private String password;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,40 +30,77 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private boolean CheckConnexion(String login, String pass)
+    public void makeRequestUserInfo(String path)
     {
+        final TextView msg = (TextView) findViewById(R.id.message_co);
+
+        final Context view = this;
+        RequestQueue queue = MySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET,
+                "http://epitech-api.herokuapp.com/" + path, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Intent intent = new Intent(view, UserInfos.class);
+                        intent.putExtra("info_user", response.toString());
+                        intent.putExtra("token", token);
+                        startActivity(intent);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        NetworkResponse networkResponse = error.networkResponse;
+
+                        msg.setText(error.toString());
+                    }
+                });
+        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
+    }
+
+    public void makeRequestLogin(String path)
+    {
+        final TextView msg = (TextView) findViewById(R.id.message_co);
+
+        RequestQueue queue = MySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET,
+                "http://epitech-api.herokuapp.com/" + path, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        msg.setText("Welcome in Epitech's intranet\nCurrent connexion");
+                        try {
+                            token = response.getString("token");
+                            makeRequestUserInfo("infos?token=" + response.getString("token"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        NetworkResponse networkResponse = error.networkResponse;
+                        if (networkResponse != null && networkResponse.statusCode == 401)
+                        {
+                            msg.setText("The login and / or password are invalid.");
+                        }
+                    }
+                });
+        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
+    }
+
+    private boolean CheckConnexion()
+    {
+        makeRequestLogin("login?login=" + login + "&password=" + password);
         return true;
     }
 
     public void checkLogin(View view)
     {
-        EditText login = (EditText) findViewById(R.id.loginInput);
+        EditText logint = (EditText) findViewById(R.id.loginInput);
         EditText pass = (EditText) findViewById(R.id.PassInput);
-        String loginx = login.getText().toString();
-        String password = pass.getText().toString();
-        CheckConnexion("ovejer_n", "n1JjiJYN");
-        Toast.makeText(this, loginx + " " + password, Toast.LENGTH_LONG).show();
+        login = logint.getText().toString();
+        password = pass.getText().toString();
+        CheckConnexion();
     }
 }
