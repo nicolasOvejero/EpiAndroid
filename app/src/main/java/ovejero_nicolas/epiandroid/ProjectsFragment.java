@@ -66,7 +66,7 @@ public class ProjectsFragment extends Fragment {
 
         for (int i = 0; i < obj.length(); i++) {
             try {
-                if (!AllProject) {
+                if ( !AllProject ) {
                     if (obj.getJSONObject(i) != null && !Objects.equals(obj.getJSONObject(i).getString("registered"), "1"))
                     {
                         itemProject.add(0, obj.getJSONObject(i).getString("codemodule") + "\n" +
