@@ -21,7 +21,7 @@ public class UserInfos extends FragmentActivity {
         bundleUser.putString("token", getIntent().getStringExtra("token"));
 
         mTabHost.addTab(mTabHost.newTabSpec("perso").setIndicator("Personnal"), UserFragment.class, bundleUser);
-        mTabHost.addTab(mTabHost.newTabSpec("planning").setIndicator("Planning"), fragment_planning.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("planning").setIndicator("Planning"), PlanningFragment.class, null);
 //        mTabHost.addTab(mTabHost.newTabSpec("grades").setIndicator("Grades"), UserFragment.class, null);
 
 //      ((TextView)findViewById(R.id.Title)).setText("Test");
