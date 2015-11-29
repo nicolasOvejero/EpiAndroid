@@ -2,6 +2,7 @@ package ovejero_nicolas.epiandroid;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,10 +30,13 @@ public class UserFragment extends Fragment  {
     private View C;
     private ListView listProject;
     private ListView ListNote;
+    private ListView historyList;
     private ArrayList<String> itemProject;
     private ArrayList<String> itemNote;
+    private ArrayList<String> itemHistory;
     private ArrayAdapter<String> itemAdapterModule;
     private ArrayAdapter<String> itemAdapterNote;
+    private ArrayAdapter<String> itemAdapterHistory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +69,7 @@ public class UserFragment extends Fragment  {
             makeRequestImage("photo?token=" + args.getString("token") + "&login=" + obj.getJSONObject("infos").getString("login"));
             setUpViewProject(obj.getJSONObject("board").getJSONArray("projets"), 5);
             setUpViewNote(obj.getJSONObject("board").getJSONArray("notes"), 5);
+            setUpViewHistory(obj.getJSONArray("history"), 5);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -81,12 +86,16 @@ public class UserFragment extends Fragment  {
         for (int i = 0; i < limit; i++) {
             try {
                 if (obj.getJSONObject(i) != null)
-                    addItemList(obj.getJSONObject(i).getString("title"), itemProject, itemAdapterModule);
+                {
+                    itemProject.add(0, obj.getJSONObject(i).getString("title"));
+                    itemAdapterModule.notifyDataSetChanged();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
+
 
     private void setUpViewNote(JSONArray obj, int limit) {
         ListNote = (ListView)C.findViewById(R.id.listNote);
@@ -99,16 +108,39 @@ public class UserFragment extends Fragment  {
         for (int i = 0; i < limit; i++) {
             try {
                 if (obj.getJSONObject(i) != null)
-                    addItemList(obj.getJSONObject(i).getString("title"), itemNote, itemAdapterNote);
+                {
+                    itemNote.add(0, obj.getJSONObject(i).getString("title"));
+                    itemAdapterNote.notifyDataSetChanged();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    protected void addItemList(String info, ArrayList<String> itemProject, ArrayAdapter<String> itemAdapter) {
-        itemProject.add(0, info);
-        itemAdapter.notifyDataSetChanged();
+    private void setUpViewHistory(JSONArray obj, int limit) {
+        historyList = (ListView)C.findViewById(R.id.historyList);
+        itemHistory = new ArrayList<>();
+        itemHistory.clear();
+
+        itemAdapterHistory = new ArrayAdapter<>(C.getContext(), android.R.layout.simple_list_item_1, itemHistory);
+        historyList.setAdapter(itemAdapterHistory);
+
+        for (int i = 0; i < limit; i++) {
+            try {
+                if (obj.getJSONObject(i) != null)
+                {
+                    itemHistory.add(0, stripHtml(obj.getJSONObject(i).getString("title")));
+                    itemAdapterHistory.notifyDataSetChanged();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String stripHtml(String html) {
+        return Html.fromHtml(html).toString();
     }
 
 /*

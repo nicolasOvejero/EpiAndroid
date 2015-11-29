@@ -28,4 +28,5 @@
     <string name="tagImage">Profil Picture</string>
     <string name="projectPres">Projects</string>
     <string name="modulePres">Modules</string>
+    <string name="history">History</string>
 </resources>
