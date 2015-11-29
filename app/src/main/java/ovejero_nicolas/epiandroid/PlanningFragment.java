@@ -13,8 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -22,11 +20,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -40,7 +35,7 @@ public class PlanningFragment extends Fragment {
     CalendarView    _calendar;
     ArrayAdapter<String> _adapter;
     ArrayList<String> _listItems = new ArrayList<>();
-    ArrayList<activityItem> _activityList = new ArrayList<activityItem>();
+    ArrayList<activityItem> _activityList = new ArrayList<>();
     String _token;
 
     public final class activityItem {
@@ -78,7 +73,6 @@ public class PlanningFragment extends Fragment {
         _activity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("POSITION", String.valueOf(position));
                 activityItem tmp = _activityList.get(position);
                 if (tmp.errors)
                     new AlertDialog.Builder(_view.getContext())
@@ -116,7 +110,6 @@ public class PlanningFragment extends Fragment {
 
     public void setActivity(int year, int month, int day) {
         String path = "planning?token=" + _token + "&start=" + year + "-" + month + "-" + day + "&end=" + year + "-" + month + "-" + day;
-        Log.e("PATH", path);
         final ProgressDialog pd = ProgressDialog.show(_view.getContext(), "Chargement...", "Merci de patienter.");
         RequestQueue queue = MySingleton.getInstance(_view.getContext()).getRequestQueue();
         JsonArrayRequest jsObjRequest = new JsonArrayRequest(Request.Method.GET,

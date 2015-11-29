@@ -27,6 +27,18 @@
     <string name="title_grades">Grades</string>
     <string name="tagImage">Profil Picture</string>
     <string name="projectPres">Projects</string>
-    <string name="modulePres">Modules</string>
+    <string name="modulePres">Notes</string>
     <string name="history">History</string>
+    <string name="title_modules">Modules</string>
+    <string name="title_projects">Projects</string>
+    <string name="my_project">My Project</string>
+    <string name="all_project">All Project</string>
+    <string name="my_projects">My Project</string>
+    <string name="my_modules">My Modules</string>
+    <string name="sB1">B1</string>
+    <string name="sB2">B2</string>
+    <string name="sB3">B3</string>
+    <string name="sB4">B4</string>
+    <string name="sB5">B5</string>
+    <string name="sCB6">B6</string>
 </resources>

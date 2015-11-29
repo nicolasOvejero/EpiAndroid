@@ -1,5 +1,6 @@
 package ovejero_nicolas.epiandroid;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -67,7 +68,7 @@ public class UserFragment extends Fragment  {
             log.setText((obj.getJSONArray("current").getJSONObject(0).getString("active_log")).substring(0, 5) + " h");
             city.setText(obj.getJSONObject("infos").getString("location"));
             makeRequestImage("photo?token=" + args.getString("token") + "&login=" + obj.getJSONObject("infos").getString("login"));
-            setUpViewProject(obj.getJSONObject("board").getJSONArray("projets"), 5);
+                setUpViewProject(obj.getJSONObject("board").getJSONArray("projets"), 5);
             setUpViewNote(obj.getJSONObject("board").getJSONArray("notes"), 5);
             setUpViewHistory(obj.getJSONArray("history"), 5);
         } catch (JSONException e) {
@@ -83,7 +84,7 @@ public class UserFragment extends Fragment  {
         itemAdapterModule = new ArrayAdapter<>(C.getContext(), android.R.layout.simple_list_item_1, itemProject);
         listProject.setAdapter(itemAdapterModule);
 
-        for (int i = 0; i < limit; i++) {
+        for (int i = 0; i < obj.length() && i < limit; i++) {
             try {
                 if (obj.getJSONObject(i) != null)
                 {
@@ -96,7 +97,6 @@ public class UserFragment extends Fragment  {
         }
     }
 
-
     private void setUpViewNote(JSONArray obj, int limit) {
         ListNote = (ListView)C.findViewById(R.id.listNote);
         itemNote = new ArrayList<>();
@@ -105,11 +105,11 @@ public class UserFragment extends Fragment  {
         itemAdapterNote = new ArrayAdapter<>(C.getContext(), android.R.layout.simple_list_item_1, itemNote);
         ListNote.setAdapter(itemAdapterNote);
 
-        for (int i = 0; i < limit; i++) {
+        for (int i = 0; i < obj.length() && i < limit; i++) {
             try {
                 if (obj.getJSONObject(i) != null)
                 {
-                    itemNote.add(0, obj.getJSONObject(i).getString("title"));
+                    itemNote.add(0, obj.getJSONObject(i).getString("title") + " : " + obj.getJSONObject(i).getString("note"));
                     itemAdapterNote.notifyDataSetChanged();
                 }
             } catch (JSONException e) {
@@ -126,10 +126,9 @@ public class UserFragment extends Fragment  {
         itemAdapterHistory = new ArrayAdapter<>(C.getContext(), android.R.layout.simple_list_item_1, itemHistory);
         historyList.setAdapter(itemAdapterHistory);
 
-        for (int i = 0; i < limit; i++) {
+        for (int i = 0; i < obj.length() && i < limit; i++) {
             try {
-                if (obj.getJSONObject(i) != null)
-                {
+                if (obj.getJSONObject(i) != null) {
                     itemHistory.add(0, stripHtml(obj.getJSONObject(i).getString("title")));
                     itemAdapterHistory.notifyDataSetChanged();
                 }
@@ -143,17 +142,7 @@ public class UserFragment extends Fragment  {
         return Html.fromHtml(html).toString();
     }
 
-/*
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putInt(STATE_SCORE, mCurrentScore);
-        savedInstanceState.putInt(STATE_LEVEL, mCurrentLevel);
-
-        super.onSaveInstanceState(savedInstanceState);
-    }
-*/
-
-    private void makeRequestImage(String path)
+    private void makeRequestImage(final String path)
     {
         final ImageView mImg = (ImageView) C.findViewById(R.id.profilImage);
 
@@ -184,6 +173,7 @@ public class UserFragment extends Fragment  {
     public void makeRequestUserInfo()
     {
         final TextView msg = (TextView) C.findViewById(R.id.Title);
+        final ProgressDialog toto = ProgressDialog.show(C.getContext(), "Chargement...", "Merci de patienter.");
 
         RequestQueue queue = MySingleton.getInstance(C.getContext()).getRequestQueue();
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET,
@@ -192,14 +182,15 @@ public class UserFragment extends Fragment  {
                     @Override
                     public void onResponse(JSONObject response) {
                         putInfosInScreen(response);
+                        toto.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         NetworkResponse networkResponse = error.networkResponse;
-
                         msg.setText(error.toString());
+                        toto.dismiss();
                     }
                 });
         MySingleton.getInstance(C.getContext()).addToRequestQueue(jsObjRequest);

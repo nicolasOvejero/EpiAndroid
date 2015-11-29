@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_first_fragment"
@@ -11,5 +10,11 @@
         <item
             android:id="@+id/nav_third_fragment"
             android:title="@string/title_grades" />
+        <item
+            android:id="@+id/nav_four_fragment"
+            android:title="@string/title_projects" />
+        <item
+            android:id="@+id/nav_five_fragment"
+            android:title="@string/title_modules" />
     </group>
 </menu>

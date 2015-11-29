@@ -19,6 +19,7 @@ public class principal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_principal);
 
+        First();
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -26,6 +27,25 @@ public class principal extends AppCompatActivity {
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
 
         setupDrawerContent(nvDrawer);
+    }
+
+    public void First() {
+        Fragment fragment = null;
+        try {
+            fragment = (UserFragment.class).newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Bundle extras = getIntent().getExtras();
+        if (fragment != null) {
+            fragment.setArguments(extras);
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+        setTitle(R.string.title_info_user);
     }
 
     @Override
@@ -46,13 +66,14 @@ public class principal extends AppCompatActivity {
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
-                        return true;
-                    }
-                });
+            new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(MenuItem menuItem) {
+                    selectDrawerItem(menuItem);
+                    return true;
+                }
+            }
+        );
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
@@ -65,6 +86,12 @@ public class principal extends AppCompatActivity {
                 break;
             case R.id.nav_second_fragment:
                 fragmentClass = PlanningFragment.class;
+                break;
+            case R.id.nav_four_fragment:
+                fragmentClass = ProjectsFragment.class;
+                break;
+            case R.id.nav_five_fragment:
+                fragmentClass = ModulesFragment.class;
                 break;
             default:
                 fragmentClass = UserFragment.class;
