@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 
 import com.android.volley.NetworkResponse;
@@ -37,10 +38,17 @@ public class PlanningFragment extends Fragment {
     ArrayList<String> _listItems = new ArrayList<>();
     ArrayList<activityItem> _activityList = new ArrayList<>();
     String _token;
+    private boolean B1 = true;
+    private boolean B2 = true;
+    private boolean B3 = true;
+    private boolean B4 = true;
+    private boolean B5 = true;
+    private boolean B6 = true;
 
     public final class activityItem {
 
         public String total_students_registered, titlemodule, codemodule, start, end, type_title, room, acti_title;
+        int semester;
         boolean errors = false;
 
         public activityItem(JSONObject o) {
@@ -53,6 +61,7 @@ public class PlanningFragment extends Fragment {
                 type_title = o.getString("type_title");
                 total_students_registered = o.getJSONObject("room").getString("code");
                 acti_title = o.getString("acti_title");
+                semester = o.getInt("semester");
             } catch (Exception e) {
                 errors = true;
                 Log.e("ERROR", e.getMessage());
@@ -77,9 +86,9 @@ public class PlanningFragment extends Fragment {
                 if (tmp.errors)
                     new AlertDialog.Builder(_view.getContext())
                             .setTitle(tmp.acti_title)
-                            .setMessage("Titre : " + tmp.acti_title + "\n" +
+                            .setMessage("Titre  du module : " + tmp.titlemodule+ "\n" +
                                     "Code du module : " + tmp.codemodule + "\n" +
-                                    "Titre du module : " + tmp.titlemodule + "\n" +
+                                    "Titre : " + tmp.acti_title + "\n" +
                                     "Etudiants inscrits : " + tmp.total_students_registered + "\n" +
                                     "Type : " + tmp.type_title + "\n" +
                                     "Salle : " + tmp.room + "\n" +
@@ -105,12 +114,106 @@ public class PlanningFragment extends Fragment {
             }
         });
 
+        CheckBox button1 = (CheckBox)_view.findViewById(R.id.CB1);
+        button1.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                B1 = ((CheckBox) v).isChecked();
+                setUpViewProject();
+            }
+        });
+        CheckBox button2 = (CheckBox)_view.findViewById(R.id.CB2);
+        button2.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                B2 = ((CheckBox) v).isChecked();
+                setUpViewProject();
+            }
+        });
+        CheckBox button3 = (CheckBox)_view.findViewById(R.id.CB3);
+        button3.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                B3 = ((CheckBox) v).isChecked();
+                setUpViewProject();
+            }
+        });
+        CheckBox button4 = (CheckBox)_view.findViewById(R.id.CB4);
+        button4.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                B4 = ((CheckBox) v).isChecked();
+                setUpViewProject();
+            }
+        });
+        CheckBox button5 = (CheckBox)_view.findViewById(R.id.CB5);
+        button5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                B5 = ((CheckBox) v).isChecked();
+                setUpViewProject();
+            }
+        });
+        CheckBox button6 = (CheckBox)_view.findViewById(R.id.CB6);
+        button6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                B6 = ((CheckBox) v).isChecked();
+                setUpViewProject();
+            }
+        });
+
         return _view;
+    }
+
+    private void setUpViewProject()
+    {
+        _adapter.clear();
+        for (activityItem maBite : _activityList) {
+            if (maBite.semester == 1 && B1) {
+                _listItems.add(maBite.titlemodule + "\n" + "Début : " + maBite.start + "\n" + "Fin : " + maBite.end);
+                _adapter.notifyDataSetChanged();
+            }
+            else if (maBite.semester == 2 && B2)
+            {
+                _listItems.add(maBite.titlemodule + "\n" + "Début : " + maBite.start + "\n" + "Fin : " + maBite.end);
+                _adapter.notifyDataSetChanged();
+            }
+            else if (maBite.semester == 3 && B3)
+            {
+                _listItems.add(maBite.titlemodule + "\n" + "Début : " + maBite.start + "\n" + "Fin : " + maBite.end);
+                _adapter.notifyDataSetChanged();
+            }
+            else if (maBite.semester == 4 && B4)
+            {
+                _listItems.add(maBite.titlemodule + "\n" + "Début : " + maBite.start + "\n" + "Fin : " + maBite.end);
+                _adapter.notifyDataSetChanged();
+            }
+            else if (maBite.semester == 5 && B5)
+            {
+                _listItems.add(maBite.titlemodule + "\n" + "Début : " + maBite.start + "\n" + "Fin : " + maBite.end);
+                _adapter.notifyDataSetChanged();
+            }
+            else if (maBite.semester == 6 && B6)
+            {
+                _listItems.add(maBite.titlemodule + "\n" + "Début : " + maBite.start + "\n" + "Fin : " + maBite.end);
+                _adapter.notifyDataSetChanged();
+            }
+        }
     }
 
     public void setActivity(int year, int month, int day) {
         String path = "planning?token=" + _token + "&start=" + year + "-" + month + "-" + day + "&end=" + year + "-" + month + "-" + day;
         final ProgressDialog pd = ProgressDialog.show(_view.getContext(), "Chargement...", "Merci de patienter.");
+
         RequestQueue queue = MySingleton.getInstance(_view.getContext()).getRequestQueue();
         JsonArrayRequest jsObjRequest = new JsonArrayRequest(Request.Method.GET,
                 "http://epitech-api.herokuapp.com/" + path, null,
@@ -122,8 +225,7 @@ public class PlanningFragment extends Fragment {
                             for (int i = 0; response.getJSONObject(i) != null; i++) {
                                 activityItem tmp = new activityItem(response.getJSONObject(i));
                                 _activityList.add(i, tmp);
-                                _listItems.add(tmp.acti_title + "\n" + "Début : " + tmp.start + "\n" + "Fin : " + tmp.end);
-                                _adapter.notifyDataSetChanged();
+                                setUpViewProject();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
