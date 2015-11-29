@@ -22,6 +22,10 @@
             android:name=".UserInfos"
             android:label="@string/title_activity_user_infos" >
         </activity>
+        <activity
+            android:name=".principal"
+            android:label="@string/title_activity_principal" >
+        </activity>
     </application>
 
 </manifest>

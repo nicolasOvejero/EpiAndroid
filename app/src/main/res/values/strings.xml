@@ -17,5 +17,15 @@
     <string name="semester">Semester : </string>
     <string name="year">Year : </string>
     <string name="profil_picture">Profil Picture</string>
+    <string name="promo">Promo : </string>
+    <string name="activeLog">Log Time : </string>
+    <string name="city">City : </string>
+    <string name="title_activity_principal">principal</string>
 
+    <string name="title_info_user">Personnal Information</string>
+    <string name="title_planning">Planning</string>
+    <string name="title_grades">Grades</string>
+    <string name="tagImage">Profil Picture</string>
+    <string name="projectPres">Projects</string>
+    <string name="modulePres">Modules</string>
 </resources>

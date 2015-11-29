@@ -30,7 +30,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
     }
 
-    public void makeRequestUserInfo(String path)
+    public void makeRequestLogin(String path)
     {
         final TextView msg = (TextView) findViewById(R.id.message_co);
 
@@ -41,37 +41,11 @@ public class Login extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Intent intent = new Intent(view, UserInfos.class);
-                        intent.putExtra("info_user", response.toString());
-                        intent.putExtra("token", token);
-                        startActivity(intent);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        NetworkResponse networkResponse = error.networkResponse;
-
-                        msg.setText(error.toString());
-                    }
-                });
-        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
-    }
-
-    public void makeRequestLogin(String path)
-    {
-        final TextView msg = (TextView) findViewById(R.id.message_co);
-
-        RequestQueue queue = MySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET,
-                "http://epitech-api.herokuapp.com/" + path, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
                         msg.setText("Welcome in Epitech's intranet\nCurrent connexion");
                         try {
-                            token = response.getString("token");
-                            makeRequestUserInfo("infos?token=" + response.getString("token"));
+                            Intent intent = new Intent(view, principal.class);
+                            intent.putExtra("token", response.getString("token"));
+                            startActivity(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -89,18 +63,14 @@ public class Login extends AppCompatActivity {
         MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 
-    private boolean CheckConnexion()
-    {
-        makeRequestLogin("login?login=" + login + "&password=" + password);
-        return true;
-    }
-
     public void checkLogin(View view)
     {
         EditText logint = (EditText) findViewById(R.id.loginInput);
         EditText pass = (EditText) findViewById(R.id.PassInput);
         login = logint.getText().toString();
         password = pass.getText().toString();
-        CheckConnexion();
+        login = "ovejer_n";
+        password = "n1JjiJYN";
+        makeRequestLogin("login?login=" + login + "&password=" + password);
     }
 }
