@@ -24,6 +24,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class UserFragment extends Fragment  {
@@ -68,7 +70,7 @@ public class UserFragment extends Fragment  {
             log.setText((obj.getJSONArray("current").getJSONObject(0).getString("active_log")).substring(0, 5) + " h");
             city.setText(obj.getJSONObject("infos").getString("location"));
             makeRequestImage("photo?token=" + args.getString("token") + "&login=" + obj.getJSONObject("infos").getString("login"));
-                setUpViewProject(obj.getJSONObject("board").getJSONArray("projets"), 5);
+            setUpViewProject(obj.getJSONObject("board").getJSONArray("projets"), 5);
             setUpViewNote(obj.getJSONObject("board").getJSONArray("notes"), 5);
             setUpViewHistory(obj.getJSONArray("history"), 5);
         } catch (JSONException e) {
@@ -88,8 +90,13 @@ public class UserFragment extends Fragment  {
             try {
                 if (obj.getJSONObject(i) != null)
                 {
-                    itemProject.add(0, obj.getJSONObject(i).getString("title"));
-                    itemAdapterModule.notifyDataSetChanged();
+                    if (obj.getJSONObject(i).has("title") && obj.getJSONObject(i).has("timeline_start")
+                            && obj.getJSONObject(i).has("timeline_end")) {
+                        itemProject.add(0, obj.getJSONObject(i).getString("title") + "\nFrom : " +
+                                (obj.getJSONObject(i).getString("timeline_start")).substring(0, 10) +
+                                " To " + (obj.getJSONObject(i).getString("timeline_end")).substring(0, 10));
+                        itemAdapterModule.notifyDataSetChanged();
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -109,7 +116,9 @@ public class UserFragment extends Fragment  {
             try {
                 if (obj.getJSONObject(i) != null)
                 {
-                    itemNote.add(0, obj.getJSONObject(i).getString("title") + " : " + obj.getJSONObject(i).getString("note"));
+                    itemNote.add(0, obj.getJSONObject(i).getString("title") + " : " +
+                            obj.getJSONObject(i).getString("note") +
+                            "\nAuteur : " + obj.getJSONObject(i).getString("noteur"));
                     itemAdapterNote.notifyDataSetChanged();
                 }
             } catch (JSONException e) {
@@ -129,7 +138,9 @@ public class UserFragment extends Fragment  {
         for (int i = 0; i < obj.length() && i < limit; i++) {
             try {
                 if (obj.getJSONObject(i) != null) {
-                    itemHistory.add(0, stripHtml(obj.getJSONObject(i).getString("title")));
+                    itemHistory.add(0, stripHtml(obj.getJSONObject(i).getString("title")) + "\n\n" +
+                            stripHtml(obj.getJSONObject(i).getString("content"))
+                            + "\n\nPublished Date : " + obj.getJSONObject(i).getString("date"));
                     itemAdapterHistory.notifyDataSetChanged();
                 }
             } catch (JSONException e) {

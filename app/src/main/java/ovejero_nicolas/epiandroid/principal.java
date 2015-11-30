@@ -93,6 +93,9 @@ public class principal extends AppCompatActivity {
             case R.id.nav_five_fragment:
                 fragmentClass = ModulesFragment.class;
                 break;
+            case R.id.nav_third_fragment:
+                fragmentClass = CommmeTuVeux.class;
+                break;
             default:
                 fragmentClass = UserFragment.class;
         }

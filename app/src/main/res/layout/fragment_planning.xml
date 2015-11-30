@@ -10,7 +10,7 @@
         android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="306dp"
-        android:layout_columnSpan="6"
+        android:layout_columnSpan="7"
         android:layout_column="0">
     </CalendarView>
 
@@ -18,10 +18,19 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/sB0"
+        android:id="@+id/CB0"
+        android:layout_row="1"
+        android:layout_column="0"
+        android:checked="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/sB1"
         android:id="@+id/CB1"
         android:layout_row="1"
-        android:layout_column="0"
+        android:layout_column="1"
         android:checked="true" />
 
     <CheckBox
@@ -30,7 +39,7 @@
         android:text="@string/sB2"
         android:id="@+id/CB2"
         android:layout_row="1"
-        android:layout_column="1"
+        android:layout_column="2"
         android:checked="true" />
 
     <CheckBox
@@ -39,7 +48,7 @@
         android:text="@string/sB3"
         android:id="@+id/CB3"
         android:layout_row="1"
-        android:layout_column="2"
+        android:layout_column="3"
         android:checked="true" />
 
     <CheckBox
@@ -48,7 +57,7 @@
         android:text="@string/sB4"
         android:id="@+id/CB4"
         android:layout_row="1"
-        android:layout_column="3"
+        android:layout_column="4"
         android:checked="true" />
 
     <CheckBox
@@ -57,7 +66,7 @@
         android:text="@string/sB5"
         android:id="@+id/CB5"
         android:layout_row="1"
-        android:layout_column="4"
+        android:layout_column="5"
         android:checked="true" />
 
     <CheckBox
@@ -66,7 +75,7 @@
         android:text="@string/sCB6"
         android:id="@+id/CB6"
         android:layout_row="1"
-        android:layout_column="5"
+        android:layout_column="6"
         android:checked="true" />
 
     <ListView
