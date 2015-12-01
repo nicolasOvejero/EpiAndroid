@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">EpiAndroid Login</string>
     <string name="title_activity_user_infos">Personnal Information</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
     <string name="Login">Login</string>
@@ -43,4 +45,5 @@
     <string name="sB5">B5</string>
     <string name="sCB6">B6</string>
     <string name="lol">API NON FONCTIONNELLE</string>
+    <string name="header_profile">Picture View</string>
 </resources>

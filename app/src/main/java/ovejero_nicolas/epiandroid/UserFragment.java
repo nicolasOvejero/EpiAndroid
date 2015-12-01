@@ -2,6 +2,7 @@ package ovejero_nicolas.epiandroid;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;

@@ -45,6 +45,7 @@ public class Login extends AppCompatActivity {
                         try {
                             Intent intent = new Intent(view, principal.class);
                             intent.putExtra("token", response.getString("token"));
+                            intent.putExtra("login", login);
                             startActivity(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();
