@@ -8,19 +8,19 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 public class UserClass implements Serializable {
-    private String login; //
-    private String token; //
-    private String title; //
-    private String promo; //
-    private String logTime; //
-    private int semester; //
-    private String city; //
-    private JSONArray project; //
-    private JSONArray notes; //
-    private JSONArray activity; //
-    private JSONArray modules; //
-    private JSONArray history; //
-    private JSONObject infos; //
+    private String login;
+    private String token;
+    private String title;
+    private String promo;
+    private String logTime;
+    private int semester;
+    private String city;
+    private JSONArray project;
+    private JSONArray notes;
+    private JSONArray activity;
+    private JSONArray modules;
+    private JSONArray history;
+    private JSONObject infos;
     private Bitmap picture;
 
     public String getLogin() {

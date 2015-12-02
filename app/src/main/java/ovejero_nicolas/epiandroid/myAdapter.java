@@ -2,6 +2,8 @@ package ovejero_nicolas.epiandroid;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +50,7 @@ public class myAdapter extends BaseAdapter {
         TextView from = (TextView) vi.findViewById(R.id.from);
         ProgressBar pgb = (ProgressBar) vi.findViewById(R.id.progressBar);
         TextView to = (TextView) vi.findViewById(R.id.to);
+        pgb.getProgressDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
         try {
             pgb.setProgress((int)Float.parseFloat(user.getProject().getJSONObject(position).getString("timeline_barre")));
             text.setText(user.getProject().getJSONObject(position).getString("title"));

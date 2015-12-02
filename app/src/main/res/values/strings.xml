@@ -48,4 +48,14 @@
     <string name="sCB6">B6</string>
     <string name="lol">API NON FONCTIONNELLE</string>
     <string name="header_profile">Picture View</string>
+    <string name="moduleTitle">Module Title : </string>
+    <string name="moduleCode">Module Code : </string>
+    <string name="Title">Title : </string>
+    <string name="nbStu">Nb Student : </string>
+    <string name="type">Type : </string>
+    <string name="room">Room : </string>
+    <string name="from">From : </string>
+    <string name="to">To : </string>
+    <string name="token">Token : </string>
+    <string name="validate">OK</string>
 </resources>
