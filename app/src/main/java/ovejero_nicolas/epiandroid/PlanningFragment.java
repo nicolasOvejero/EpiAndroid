@@ -39,7 +39,7 @@ public class PlanningFragment extends Fragment {
     ArrayList<String> _listItems = new ArrayList<>();
     ArrayList<activityItem> _activityList = new ArrayList<>();
     ArrayList<activityItem> _activityListSave = new ArrayList<>();
-    String _token;
+    UserClass user;
     private boolean B0 = true;
     private boolean B1 = true;
     private boolean B2 = true;
@@ -104,7 +104,14 @@ public class PlanningFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         _view = inflater.inflate(R.layout.fragment_planning, container, false);
-        _token = getArguments().getString("token");
+
+        Bundle extras = getArguments();
+        if (extras != null) {
+            user = (UserClass)extras.getSerializable("user");
+        }
+
+        System.out.println(user);
+
         _activity = (ListView) _view.findViewById(R.id.activity);
         _adapter = new ArrayAdapter<>(_view.getContext(),
                 android.R.layout.simple_list_item_1,
@@ -273,7 +280,7 @@ public class PlanningFragment extends Fragment {
     }
 
     public void setActivity(int year, int month, int day) {
-        String path = "planning?token=" + _token + "&start=" + year + "-" + month + "-" + day + "&end=" + year + "-" + month + "-" + day;
+        String path = "planning?token=" + user.getToken() + "&start=" + year + "-" + month + "-" + day + "&end=" + year + "-" + month + "-" + day;
         final ProgressDialog pd = ProgressDialog.show(_view.getContext(), "Chargement...", "Merci de patienter.");
 
         RequestQueue queue = MySingleton.getInstance(_view.getContext()).getRequestQueue();

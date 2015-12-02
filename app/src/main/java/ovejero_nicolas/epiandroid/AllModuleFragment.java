@@ -1,13 +1,11 @@
 package ovejero_nicolas.epiandroid;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -25,7 +23,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ModulesFragment extends Fragment {
+public class AllModuleFragment extends Fragment {
     private View C;
     private String path;
     private boolean B0 = true;
@@ -36,21 +34,20 @@ public class ModulesFragment extends Fragment {
     private boolean B5 = true;
     private boolean B6 = true;
     private JSONArray obj;
-    private JSONArray _obj;
     private UserClass user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        C = inflater.inflate(R.layout.fragment_modules, container, false);
+        C = inflater.inflate(R.layout.fragment_all_module, container, false);
 
         Bundle extras = getArguments();
         if (extras != null) {
             user = (UserClass)extras.getSerializable("user");
         }
         if (user != null) {
-            path = "modules?token=" + user.getToken();
+            path = "allmodules?token=" + user.getToken() + "&location=FR/LYN&scolaryear=2015&course=bachelor/classic";
         }
 
         CheckBox button0 = (CheckBox)C.findViewById(R.id.CB0);
@@ -120,65 +117,12 @@ public class ModulesFragment extends Fragment {
             }
         });
 
-        ListView lv = (ListView) C.findViewById(R.id.modules);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-                String toto = adapter.getItemAtPosition(position).toString();
-
-                String value = toto.substring(0, toto.indexOf(" ", 0));
-                String all = "";
-                for (int i = 0; i < _obj.length(); i++) {
-                    try {
-                        if (_obj.getJSONObject(i).getString("codemodule").contains(value))
-                        {
-                            all += _obj.getJSONObject(i).getString("title") + " : " +
-                                    _obj.getJSONObject(i).getString("final_note") + "\n";
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                new AlertDialog.Builder(C.getContext())
-                        .setTitle("Marks : ")
-                        .setMessage((all.equals("") ? all : "No marks for this module !"))
-                        .show();
-
-            }
-        });
-
-
-        getDataFromModule("marks?token=" + user.getToken());
         makeRequestProjects();
         return C;
     }
 
-    private void getDataFromModule(String pathr)
-    {
-        RequestQueue queue = MySingleton.getInstance(C.getContext()).getRequestQueue();
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET,
-                "http://epitech-api.herokuapp.com/" + pathr, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            _obj = response.getJSONArray("notes");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        NetworkResponse networkResponse = error.networkResponse;
-                        }
-                });
-        MySingleton.getInstance(C.getContext()).addToRequestQueue(jsObjRequest);
-    }
-
     private void setUpViewProject() {
-        ListView list = (ListView) C.findViewById(R.id.modules);
+        ListView list = (ListView) C.findViewById(R.id.allmodules);
         ArrayList<String> item = new ArrayList<>();
         item.clear();
         ArrayAdapter<String> itemAdapter = new ArrayAdapter<>(C.getContext(), android.R.layout.simple_list_item_1, item);
@@ -189,58 +133,37 @@ public class ModulesFragment extends Fragment {
                 if (obj.getJSONObject(i) != null)
                 {
                     if (obj.getJSONObject(i).getInt("semester") == 0 && B0) {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
+                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
                         itemAdapter.notifyDataSetChanged();
                     }
                     else if (obj.getJSONObject(i).getInt("semester") == 1 && B1)
                     {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
+                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
                         itemAdapter.notifyDataSetChanged();
                     }
                     else if (obj.getJSONObject(i).getInt("semester") == 2 && B2)
                     {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
+                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
                         itemAdapter.notifyDataSetChanged();
                     }
                     else if (obj.getJSONObject(i).getInt("semester") == 3 && B3)
                     {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
+                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
                         itemAdapter.notifyDataSetChanged();
                     }
                     else if (obj.getJSONObject(i).getInt("semester") == 4 && B4)
                     {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
+                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
                         itemAdapter.notifyDataSetChanged();
                     }
                     else if (obj.getJSONObject(i).getInt("semester") == 5 && B5)
                     {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
+                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
                         itemAdapter.notifyDataSetChanged();
                     }
                     else if (obj.getJSONObject(i).getInt("semester") == 6 && B6)
                     {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
+                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
                         itemAdapter.notifyDataSetChanged();
                     }
                 }
@@ -261,7 +184,7 @@ public class ModulesFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            obj = response.getJSONArray("modules");
+                            obj = response.getJSONArray("items");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

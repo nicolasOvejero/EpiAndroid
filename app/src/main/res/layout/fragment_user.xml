@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".DeviceFragment"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:id="@+id/perso">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -157,8 +158,8 @@
                 android:layout_marginBottom="5dp" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/projectPres"
                 android:id="@+id/project"
@@ -166,8 +167,13 @@
                 android:layout_column="0"
                 android:layout_gravity="center_horizontal"
                 android:layout_columnSpan="3"
+                android:background="#fde799"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="38dp"
+                android:paddingTop="10dp"
+                android:paddingRight="38dp"
+                android:paddingBottom="10dp" />
 
             <ovejero_nicolas.epiandroid.NonScrollListView
                 android:layout_width="match_parent"
@@ -188,10 +194,15 @@
                 android:id="@+id/modules"
                 android:layout_row="8"
                 android:layout_column="0"
+                android:background="#fde799"
                 android:layout_gravity="center"
                 android:layout_columnSpan="3"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp" />
 
             <ovejero_nicolas.epiandroid.NonScrollListView
                 android:layout_width="match_parent"
@@ -212,11 +223,16 @@
                 android:text="@string/history"
                 android:id="@+id/listHistory"
                 android:layout_row="10"
+                android:background="#fde799"
                 android:layout_column="0"
                 android:layout_columnSpan="3"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="50dp"
+                android:paddingLeft="50dp" />
 
             <ovejero_nicolas.epiandroid.NonScrollListView
                 android:layout_width="match_parent"
@@ -226,7 +242,8 @@
                 android:layout_column="0"
                 android:layout_columnSpan="3"
                 android:dividerHeight="2.0sp"
-                android:divider="#0505b7">
+                android:divider="#0505b7"
+                android:headerDividersEnabled="false">
             </ovejero_nicolas.epiandroid.NonScrollListView>
 
         </GridLayout>

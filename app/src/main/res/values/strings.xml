@@ -27,11 +27,13 @@
     <string name="title_info_user">Personnal Information</string>
     <string name="title_planning">Planning</string>
     <string name="title_grades">Trombi</string>
+    <string name="title_modules">All Modules</string>
+    <string name="title_my_past_modules">My Current/Past Modules</string>
+    <string name="modules">Modules</string>
     <string name="tagImage">Profil Picture</string>
     <string name="projectPres">5 Last Projects</string>
-    <string name="modulePres">5 Last Note Notes</string>
+    <string name="modulePres">5 Last Notes</string>
     <string name="history">5 Last News</string>
-    <string name="title_modules">Modules</string>
     <string name="title_projects">Projects</string>
     <string name="my_project">My Project</string>
     <string name="all_project">All Project</string>

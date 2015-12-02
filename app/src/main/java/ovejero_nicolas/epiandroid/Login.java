@@ -14,6 +14,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,9 +44,11 @@ public class Login extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         msg.setText("Welcome in Epitech's intranet\nCurrent connexion");
                         try {
+                            UserClass user = new UserClass();
                             Intent intent = new Intent(view, principal.class);
-                            intent.putExtra("token", response.getString("token"));
-                            intent.putExtra("login", login);
+                            user.setToken(response.getString("token"));
+                            user.setLogin(login);
+                            intent.putExtra("user", user);
                             startActivity(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();

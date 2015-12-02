@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/my_modules"
+            android:text="@string/title_modules"
             android:id="@+id/textView"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
@@ -85,7 +85,7 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="483dp"
-            android:id="@+id/modules"
+            android:id="@+id/allmodules"
             android:layout_row="3"
             android:layout_column="0"
             android:layout_columnSpan="7"

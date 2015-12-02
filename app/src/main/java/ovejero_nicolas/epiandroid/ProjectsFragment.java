@@ -31,6 +31,7 @@ public class ProjectsFragment extends Fragment {
     private ArrayAdapter<String> itemAdapterProject;
     private boolean AllProject = true;
     private JSONArray obj;
+    private UserClass user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,8 +39,13 @@ public class ProjectsFragment extends Fragment {
     {
         C = inflater.inflate(R.layout.fragment_projects, container, false);
 
-        Bundle args = getArguments();
-        path = "projects?token=" + args.getString("token");
+        Bundle extras = getArguments();
+        if (extras != null) {
+            user = (UserClass)extras.getSerializable("user");
+        }
+        if (user != null) {
+            path = "projects?token=" + user.getToken();
+        }
 
         CheckBox button = (CheckBox)C.findViewById(R.id.checkAll);
         button.setOnClickListener(new View.OnClickListener()

@@ -3,7 +3,8 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_first_fragment"
-            android:title="@string/title_info_user" />
+            android:title="@string/title_info_user"
+            android:checked="true" />
         <item
             android:id="@+id/nav_second_fragment"
             android:title="@string/title_planning" />
@@ -13,8 +14,15 @@
         <item
             android:id="@+id/nav_four_fragment"
             android:title="@string/title_projects" />
-        <item
-            android:id="@+id/nav_five_fragment"
-            android:title="@string/title_modules" />
+        <item android:title="@string/modules">
+            <menu>
+                <item
+                    android:id="@+id/nav_my_past_modules"
+                    android:title="@string/title_my_past_modules" />
+                <item
+                    android:id="@+id/nav_my_modules"
+                    android:title="@string/title_modules" />
+            </menu>
+        </item>
     </group>
 </menu>
