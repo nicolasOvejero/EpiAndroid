@@ -139,9 +139,10 @@ public class ModulesFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
+                System.out.println("all : " + all);
                 new AlertDialog.Builder(C.getContext())
                         .setTitle("Marks : ")
-                        .setMessage((all.equals("") ? all : "No marks for this module !"))
+                        .setMessage((all.equals("") ? "No marks for this module !" : all))
                         .show();
 
             }

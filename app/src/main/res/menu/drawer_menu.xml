@@ -16,12 +16,14 @@
             android:title="@string/title_projects" />
         <item android:title="@string/modules">
             <menu>
-                <item
-                    android:id="@+id/nav_my_past_modules"
-                    android:title="@string/title_my_past_modules" />
-                <item
-                    android:id="@+id/nav_my_modules"
-                    android:title="@string/title_modules" />
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_my_past_modules"
+                        android:title="@string/title_my_past_modules" />
+                    <item
+                        android:id="@+id/nav_my_modules"
+                        android:title="@string/title_modules" />
+                </group>
             </menu>
         </item>
     </group>

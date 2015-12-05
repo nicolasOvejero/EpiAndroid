@@ -83,8 +83,6 @@ public class UserFragment extends Fragment  {
         listProject = (ListView)C.findViewById(R.id.listProject);
         itemProject = new ArrayList<>();
         itemProject.clear();
-        itemAdapterModule = new ArrayAdapter<>(C.getContext(), android.R.layout.simple_list_item_1, itemProject);
-        listProject.setAdapter(itemAdapterModule);
 
         int all = 0;
 
@@ -94,13 +92,12 @@ public class UserFragment extends Fragment  {
                 {
                     if (user.getProject().getJSONObject(i).has("title") && user.getProject().getJSONObject(i).has("timeline_start")
                             && user.getProject().getJSONObject(i).has("timeline_end")) {
-                        itemProject.add(0, user.getProject().getJSONObject(i).getString("title"));
+                        all++;
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            all++;
         }
         listProject.setAdapter(new myAdapter(C.getContext(), user, all));
     }

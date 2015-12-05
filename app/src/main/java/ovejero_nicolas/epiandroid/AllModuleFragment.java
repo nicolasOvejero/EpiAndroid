@@ -33,8 +33,8 @@ public class AllModuleFragment extends Fragment {
     private boolean B4 = true;
     private boolean B5 = true;
     private boolean B6 = true;
-    private JSONArray obj;
     private UserClass user;
+    private JSONArray obj;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -125,52 +125,37 @@ public class AllModuleFragment extends Fragment {
         ListView list = (ListView) C.findViewById(R.id.allmodules);
         ArrayList<String> item = new ArrayList<>();
         item.clear();
-        ArrayAdapter<String> itemAdapter = new ArrayAdapter<>(C.getContext(), android.R.layout.simple_list_item_1, item);
-        list.setAdapter(itemAdapter);
+        modulesAdapter adapter = new modulesAdapter(C.getContext(), obj);
+        int all = 0;
 
         for (int i = 0; i < obj.length(); i++) {
             try {
                 if (obj.getJSONObject(i) != null)
                 {
-                    if (obj.getJSONObject(i).getInt("semester") == 0 && B0) {
-                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
+                    if (obj.getJSONObject(i).getInt("semester") == 0 && B0)
+                        adapter.setB0(true);
                     else if (obj.getJSONObject(i).getInt("semester") == 1 && B1)
-                    {
-                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
+                        adapter.setB1(true);
                     else if (obj.getJSONObject(i).getInt("semester") == 2 && B2)
-                    {
-                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
+                        adapter.setB2(true);
                     else if (obj.getJSONObject(i).getInt("semester") == 3 && B3)
-                    {
-                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
+                        adapter.setB3(true);
                     else if (obj.getJSONObject(i).getInt("semester") == 4 && B4)
-                    {
-                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
+                        adapter.setB4(true);
                     else if (obj.getJSONObject(i).getInt("semester") == 5 && B5)
-                    {
-                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
+                        adapter.setB5(true);
                     else if (obj.getJSONObject(i).getInt("semester") == 6 && B6)
-                    {
-                        item.add(0, obj.getJSONObject(i).getString("code") + " " + obj.getJSONObject(i).getString("title"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
+                        adapter.setB6(true);
+                    else
+                        all--;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            all++;
         }
+        adapter.setCount(all);
+        list.setAdapter(adapter);
     }
 
     public void makeRequestProjects()
