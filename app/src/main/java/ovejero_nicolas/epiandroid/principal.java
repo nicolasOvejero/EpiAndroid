@@ -158,7 +158,7 @@ public class principal extends AppCompatActivity {
                 fragmentClass = PlanningFragment.class;
                 break;
             case R.id.nav_third_fragment:
-                fragmentClass = CommmeTuVeux.class;
+                fragmentClass = TrombiFragment.class;
                 break;
                 case R.id.nav_four_fragment:
                 fragmentClass = ProjectsFragment.class;
