@@ -62,6 +62,7 @@ public class Login extends AppCompatActivity {
                         {
                             msg.setText("The login and / or password are invalid.");
                         }
+                        System.out.println(error);
                     }
                 });
         MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);

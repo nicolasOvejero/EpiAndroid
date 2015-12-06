@@ -4,25 +4,31 @@
         <item
             android:id="@+id/nav_first_fragment"
             android:title="@string/title_info_user"
-            android:checked="true" />
+            android:checked="true"
+            android:icon="@drawable/icon_perso"/>
         <item
             android:id="@+id/nav_second_fragment"
-            android:title="@string/title_planning" />
+            android:title="@string/title_planning"
+            android:icon="@drawable/icon_calendar"/>
         <item
             android:id="@+id/nav_third_fragment"
-            android:title="@string/title_grades" />
+            android:title="@string/title_grades"
+            android:icon="@drawable/icon_trombi"/>
         <item
             android:id="@+id/nav_four_fragment"
-            android:title="@string/title_projects" />
+            android:title="@string/title_projects"
+            android:icon="@drawable/icon_project"/>
         <item android:title="@string/modules">
             <menu>
                 <group android:checkableBehavior="single">
                     <item
                         android:id="@+id/nav_my_past_modules"
-                        android:title="@string/title_my_past_modules" />
+                        android:title="@string/title_my_past_modules"
+                        android:icon="@drawable/icon_module"/>
                     <item
                         android:id="@+id/nav_my_modules"
-                        android:title="@string/title_modules" />
+                        android:title="@string/title_modules"
+                        android:icon="@drawable/icon_module"/>
                 </group>
             </menu>
         </item>
