@@ -6,10 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -25,7 +22,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class ProjectsFragment extends Fragment {
     ExpandableListAdapterProject listAdapter;
@@ -96,7 +92,6 @@ public class ProjectsFragment extends Fragment {
             for (int i = 0; i < obj.length(); i++) {
                 try {
                     if (obj.getJSONObject(i) != null && obj.getJSONObject(i).has("registered")) {
-                        System.out.println("123");
                         switch (obj.getJSONObject(i).getString("registered")) {
                             case "0":
                                 notreg.add(obj.getJSONObject(i));

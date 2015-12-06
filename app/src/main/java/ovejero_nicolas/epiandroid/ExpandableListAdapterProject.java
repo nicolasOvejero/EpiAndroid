@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -15,22 +17,16 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import cz.msebera.android.httpclient.Header;
 
 public class ExpandableListAdapterProject extends BaseExpandableListAdapter {
 
@@ -68,19 +64,67 @@ public class ExpandableListAdapterProject extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.row_project, null);
+            convertView = infalInflater.inflate(R.layout.project_list, null);
         }
 
         TextView title = (TextView) convertView.findViewById(R.id.title);
         TextView start = (TextView) convertView.findViewById(R.id.begin);
         TextView end = (TextView) convertView.findViewById(R.id.end);
+        Button subscribe = (Button) convertView.findViewById(R.id.subscribe);
+
+        subscribe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                RequestQueue queue = MySingleton.getInstance(v.getContext()).getRequestQueue();
+                final ProgressDialog pd = ProgressDialog.show(v.getContext(), "Chargement...", "Merci de patienter.");
+
+                StringRequest sr = new StringRequest(Request.Method.POST,
+                        "http://epitech-api.herokuapp.com/project", new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        pd.dismiss();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("ko " + error);
+                        pd.dismiss();
+                    }
+                })
+                {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        try {
+                            params.put("token", user.getToken());
+                            params.put("scolaryear", childText.getString("scolaryear"));
+                            params.put("codemodule", childText.getString("codemodule"));
+                            params.put("codeinstance", childText.getString("codeinstance"));
+                            params.put("codeacti", childText.getString("codeacti"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        return params;
+                    }
+                };
+                MySingleton.getInstance(v.getContext()).addToRequestQueue(sr);
+            }
+        });
 
         DateFormat sm = new SimpleDateFormat("dd-mm-yyyy");
 
         try {
-            title.setText(childText.getString("acti_title"));
-            start.setText((childText.getString("begin_acti")).substring(0, 10));
-            end.setText((childText.getString("end_acti")).substring(0, 10));
+            if (childText.getString("registered").equals("0"))
+                subscribe.setVisibility(View.VISIBLE);
+            else
+                subscribe.setVisibility(View.GONE);
+            JSONArray nvx = childText.getJSONArray("rights");
+            if (!nvx.toString().contains("prof_inst") && !nvx.toString().contains("assistant")) {
+                title.setText(childText.getString("acti_title"));
+                start.setText("From : " + (childText.getString("begin_acti")).substring(0, 10));
+                end.setText(" To : " + (childText.getString("end_acti")).substring(0, 10));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

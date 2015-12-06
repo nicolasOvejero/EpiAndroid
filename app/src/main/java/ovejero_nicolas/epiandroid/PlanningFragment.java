@@ -18,6 +18,7 @@ import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
@@ -28,6 +29,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +43,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import cz.msebera.android.httpclient.Header;
 
 public class PlanningFragment extends Fragment {
 
@@ -76,6 +82,7 @@ public class PlanningFragment extends Fragment {
         private String  codeinstance = null;
         private String scolaryear = null;
         private String codeevent = null;
+        private boolean allow_register = false;
 
         public activityItem(JSONObject o) {
             try {
@@ -83,7 +90,8 @@ public class PlanningFragment extends Fragment {
                     scolaryear = o.getString("scolaryear");
                 if (o.has("codeevent"))
                     codeevent = o.getString("codeevent");
-
+                if (o.has("allow_register"))
+                    allow_register = o.getBoolean("allow_register");
                 if (o.has("total_students_registered"))
                     total_students_registered = o.getString("total_students_registered");
                 if (o.has("titlemodule"))
@@ -157,6 +165,8 @@ public class PlanningFragment extends Fragment {
                     TextView tokenView = (TextView) dialogView.findViewById(R.id.token);
                     final EditText gettoken = (EditText) dialogView.findViewById(R.id.gettoken);
                     Button validate = (Button) dialogView.findViewById(R.id.validate);
+                    Button sub = (Button) dialogView.findViewById(R.id.subscribe);
+                    Button unsub = (Button) dialogView.findViewById(R.id.unsubscribe);
 
                     moduleCode.setText(tmp.codemodule);
                     Title.setText(tmp.acti_title);
@@ -165,6 +175,10 @@ public class PlanningFragment extends Fragment {
                     room.setText(tmp.room);
                     from.setText(tmp.start);
                     to.setText(tmp.end);
+
+                    sub.setVisibility(View.GONE);
+                    unsub.setVisibility(View.GONE);
+
                     if (!tmp.allow_token || !tmp.event_registered)
                     {
                         tokenView.setVisibility(View.GONE);
@@ -172,8 +186,29 @@ public class PlanningFragment extends Fragment {
                         validate.setVisibility(View.GONE);
                     }
 
+                    if (!tmp.event_registered && tmp.allow_register)
+                        sub.setVisibility(View.VISIBLE);
+
+                    if (tmp.event_registered) {
+                        unsub.setVisibility(View.VISIBLE);
+                    }
+
                     myAlert = searchDialog.create();
                     myAlert.show();
+
+                    sub.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            subscribe(tmp);
+                        }
+                    });
+
+                    unsub.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            unsubscribe(tmp);
+                        }
+                    });
 
                     validate.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -263,6 +298,65 @@ public class PlanningFragment extends Fragment {
         });
 
         return _view;
+    }
+
+    private void unsubscribe(final activityItem tmp)
+    {
+        final ProgressDialog pd = ProgressDialog.show(_view.getContext(), "Chargement...", "Merci de patienter.");
+
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        RequestParams toto = new RequestParams();
+        toto.put("token", user.getToken());
+        toto.put("scolaryear", tmp.scolaryear);
+        toto.put("codemodule", tmp.codemodule);
+        toto.put("codeinstance", tmp.codeinstance);
+        toto.put("codeacti", tmp.codeacti);
+        toto.put("codeevent", tmp.codeevent);
+
+        client.delete("http://epitech-api.herokuapp.com/event", toto, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                pd.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                pd.dismiss();
+            }
+        });
+    }
+
+    private void subscribe(final activityItem tmp)
+    {
+        RequestQueue queue = MySingleton.getInstance(_view.getContext()).getRequestQueue();
+        StringRequest sr = new StringRequest(Request.Method.POST,
+                "http://epitech-api.herokuapp.com/event", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                myAlert.hide();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("ko " + error);
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", user.getToken());
+                params.put("scolaryear", tmp.scolaryear);
+                params.put("codemodule", tmp.codemodule);
+                params.put("codeinstance", tmp.codeinstance);
+                params.put("codeacti", tmp.codeacti);
+                params.put("codeevent", tmp.codeevent);
+
+                return params;
+            }
+        };
+        MySingleton.getInstance(_view.getContext()).addToRequestQueue(sr);
     }
 
     private void validToken(final String token, final activityItem tmp)
