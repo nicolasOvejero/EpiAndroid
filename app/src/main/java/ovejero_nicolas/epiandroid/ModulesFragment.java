@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 
 import com.android.volley.NetworkResponse;
@@ -24,26 +25,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ModulesFragment extends Fragment {
     private View C;
     private String path;
-    private boolean B0 = true;
-    private boolean B1 = true;
-    private boolean B2 = true;
-    private boolean B3 = true;
-    private boolean B4 = true;
-    private boolean B5 = true;
-    private boolean B6 = true;
-    private JSONArray obj;
     private JSONArray _obj;
     private UserClass user;
+    ExpandableListAdapterPast listAdapter;
+    ExpandableListView expListView;
+    List<String> listDataHeader;
+    HashMap<String, List<JSONObject>> listDataChild;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
         C = inflater.inflate(R.layout.fragment_modules, container, false);
+        expListView = (ExpandableListView) C.findViewById(R.id.lvExp);
 
         Bundle extras = getArguments();
         if (extras != null) {
@@ -53,84 +53,23 @@ public class ModulesFragment extends Fragment {
             path = "modules?token=" + user.getToken();
         }
 
-        CheckBox button0 = (CheckBox)C.findViewById(R.id.CB0);
-        button0.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                B0 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-        CheckBox button1 = (CheckBox)C.findViewById(R.id.CB1);
-        button1.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                B1 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-        CheckBox button2 = (CheckBox)C.findViewById(R.id.CB2);
-        button2.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                B2 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-        CheckBox button3 = (CheckBox)C.findViewById(R.id.CB3);
-        button3.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                B3 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-        CheckBox button4 = (CheckBox)C.findViewById(R.id.CB4);
-        button4.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                B4 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-        CheckBox button5 = (CheckBox)C.findViewById(R.id.CB5);
-        button5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                B5 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-        CheckBox button6 = (CheckBox)C.findViewById(R.id.CB6);
-        button6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                B6 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
+        if (user != null) {
+            getDataFromModule("marks?token=" + user.getToken());
+        }
+        makeRequestProjects();
 
-        ListView lv = (ListView) C.findViewById(R.id.modules);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-                String toto = adapter.getItemAtPosition(position).toString();
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
-                String value = toto.substring(0, toto.indexOf(" ", 0));
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        int groupPosition, int childPosition, long id) {
+
+                JSONObject toto = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
+
                 String all = "";
                 for (int i = 0; i < _obj.length(); i++) {
                     try {
-                        if (_obj.getJSONObject(i).getString("codemodule").contains(value))
+                        if (_obj.getJSONObject(i).getString("codemodule").contains(toto.getString("codemodule")))
                         {
                             all += _obj.getJSONObject(i).getString("title") + " : " +
                                     _obj.getJSONObject(i).getString("final_note") + "\n";
@@ -139,20 +78,17 @@ public class ModulesFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-                System.out.println("all : " + all);
                 new AlertDialog.Builder(C.getContext())
                         .setTitle("Marks : ")
                         .setMessage((all.equals("") ? "No marks for this module !" : all))
                         .show();
-
+                return false;
             }
+
         });
 
-
-        getDataFromModule("marks?token=" + user.getToken());
-        makeRequestProjects();
         return C;
-    }
+        }
 
     private void getDataFromModule(String pathr)
     {
@@ -178,77 +114,67 @@ public class ModulesFragment extends Fragment {
         MySingleton.getInstance(C.getContext()).addToRequestQueue(jsObjRequest);
     }
 
-    private void setUpViewProject() {
-        ListView list = (ListView) C.findViewById(R.id.modules);
-        ArrayList<String> item = new ArrayList<>();
-        item.clear();
-        ArrayAdapter<String> itemAdapter = new ArrayAdapter<>(C.getContext(), android.R.layout.simple_list_item_1, item);
-        list.setAdapter(itemAdapter);
+    private void setUpViewProject(JSONArray obj) {
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
 
-        for (int i = 0; i < obj.length(); i++) {
-            try {
-                if (obj.getJSONObject(i) != null)
-                {
-                    if (obj.getJSONObject(i).getInt("semester") == 0 && B0) {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
-                        itemAdapter.notifyDataSetChanged();
+        listDataHeader.add("Semester 0");
+        listDataHeader.add("Semester 1");
+        listDataHeader.add("Semester 2");
+        listDataHeader.add("Semester 3");
+        listDataHeader.add("Semester 4");
+        listDataHeader.add("Semester 5");
+        listDataHeader.add("Semester 6");
+
+        List<JSONObject> s0 = new ArrayList<>();
+        List<JSONObject> s1 = new ArrayList<>();
+        List<JSONObject> s2 = new ArrayList<>();
+        List<JSONObject> s3 = new ArrayList<>();
+        List<JSONObject> s4 = new ArrayList<>();
+        List<JSONObject> s5 = new ArrayList<>();
+        List<JSONObject> s6 = new ArrayList<>();
+
+        if (obj != null) {
+            for (int i = 0; i < obj.length(); i++) {
+                try {
+                    if (obj.getJSONObject(i) != null && obj.getJSONObject(i).has("semester")) {
+                        switch (obj.getJSONObject(i).getString("semester")) {
+                            case "0":
+                                s0.add(obj.getJSONObject(i));
+                                break;
+                            case "1":
+                                s1.add(obj.getJSONObject(i));
+                                break;
+                            case "2":
+                                s2.add(obj.getJSONObject(i));
+                                break;
+                            case "3":
+                                s3.add(obj.getJSONObject(i));
+                                break;
+                            case "4":
+                                s4.add(obj.getJSONObject(i));
+                                break;
+                            case "5":
+                                s5.add(obj.getJSONObject(i));
+                                break;
+                            case "6":
+                                s6.add(obj.getJSONObject(i));
+                                break;
+                        }
                     }
-                    else if (obj.getJSONObject(i).getInt("semester") == 1 && B1)
-                    {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
-                    else if (obj.getJSONObject(i).getInt("semester") == 2 && B2)
-                    {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
-                    else if (obj.getJSONObject(i).getInt("semester") == 3 && B3)
-                    {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
-                    else if (obj.getJSONObject(i).getInt("semester") == 4 && B4)
-                    {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
-                    else if (obj.getJSONObject(i).getInt("semester") == 5 && B5)
-                    {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
-                    else if (obj.getJSONObject(i).getInt("semester") == 6 && B6)
-                    {
-                        item.add(0, obj.getJSONObject(i).getString("codemodule") + " " +
-                                obj.getJSONObject(i).getString("title") + "\n" +
-                                "Credits : " + obj.getJSONObject(i).getString("credits") + "\nGrade : " +
-                                obj.getJSONObject(i).getString("grade"));
-                        itemAdapter.notifyDataSetChanged();
-                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
         }
+
+        listDataChild.put(listDataHeader.get(0), s0);
+        listDataChild.put(listDataHeader.get(1), s1);
+        listDataChild.put(listDataHeader.get(2), s2);
+        listDataChild.put(listDataHeader.get(3), s3);
+        listDataChild.put(listDataHeader.get(4), s4);
+        listDataChild.put(listDataHeader.get(5), s5);
+        listDataChild.put(listDataHeader.get(6), s6);
     }
 
     public void makeRequestProjects()
@@ -262,11 +188,13 @@ public class ModulesFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            obj = response.getJSONArray("modules");
+                            setUpViewProject(response.getJSONArray("modules"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        setUpViewProject();
+                        listAdapter = new ExpandableListAdapterPast(C.getContext(), listDataHeader,
+                                listDataChild, user);
+                        expListView.setAdapter(listAdapter);
                         toto.dismiss();
                     }
                 },

@@ -35,9 +35,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by leoma on 05/12/2015.
- */
 public class TrombiFragment extends Fragment {
 
     private View _view;
@@ -48,6 +45,8 @@ public class TrombiFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         _view = inflater.inflate(R.layout.fragment_trombi, container, false);
+
+        return _view;
 /*
         Bundle extras = getArguments();
         if (extras != null) {
@@ -82,6 +81,6 @@ public class TrombiFragment extends Fragment {
                     }
                 });
         MySingleton.getInstance(_view.getContext()).addToRequestQueue(jsObjRequest);
-    }
 */
+    }
 }

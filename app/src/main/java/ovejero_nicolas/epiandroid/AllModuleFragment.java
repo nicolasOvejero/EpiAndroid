@@ -1,5 +1,6 @@
 package ovejero_nicolas.epiandroid;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Switch;
 
@@ -23,26 +25,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AllModuleFragment extends Fragment {
     private View C;
     private String path;
-    private boolean B0 = true;
-    private boolean B1 = true;
-    private boolean B2 = true;
-    private boolean B3 = true;
-    private boolean B4 = true;
-    private boolean B5 = true;
-    private boolean B6 = true;
     private UserClass user;
-    private JSONArray obj;
+    ExpandableListAdapter listAdapter;
+    ExpandableListView expListView;
+    List<String> listDataHeader;
+    HashMap<String, List<JSONObject>> listDataChild;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
         C = inflater.inflate(R.layout.fragment_all_module, container, false);
+        expListView = (ExpandableListView) C.findViewById(R.id.lvExp);
 
         Bundle extras = getArguments();
         if (extras != null) {
@@ -51,108 +51,72 @@ public class AllModuleFragment extends Fragment {
         if (user != null) {
             path = "allmodules?token=" + user.getToken() + "&location=FR/LYN&scolaryear=2015&course=bachelor/classic";
         }
-
-        CheckBox button0 = (CheckBox)C.findViewById(R.id.CB0);
-        button0.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                B0 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-        CheckBox button1 = (CheckBox)C.findViewById(R.id.CB1);
-        button1.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                B1 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-        CheckBox button2 = (CheckBox)C.findViewById(R.id.CB2);
-        button2.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                B2 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-        CheckBox button3 = (CheckBox)C.findViewById(R.id.CB3);
-        button3.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                B3 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-        CheckBox button4 = (CheckBox)C.findViewById(R.id.CB4);
-        button4.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                B4 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-        CheckBox button5 = (CheckBox)C.findViewById(R.id.CB5);
-        button5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                B5 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-        CheckBox button6 = (CheckBox)C.findViewById(R.id.CB6);
-        button6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                B6 = ((CheckBox) v).isChecked();
-                setUpViewProject();
-            }
-        });
-
         makeRequestProjects();
+
         return C;
     }
 
-    private void setUpViewProject() {
-        ListView list = (ListView) C.findViewById(R.id.allmodules);
-        List<JSONObject> myList = new ArrayList<>();
-        modulesAdapter myAdapter = new modulesAdapter(C.getContext(), R.layout.row_modules, myList, user);
+    private void prepareListData(JSONArray obj) {
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
 
-        for (int i = 0; i < obj.length(); i++) {
-            try {
-                if (obj.getJSONObject(i) != null)
-                {
-                    if (obj.getJSONObject(i).getInt("semester") == 0 && B0)
-                        myList.add(obj.getJSONObject(i));
-                    else if (obj.getJSONObject(i).getInt("semester") == 1 && B1)
-                        myList.add(obj.getJSONObject(i));
-                    else if (obj.getJSONObject(i).getInt("semester") == 2 && B2)
-                        myList.add(obj.getJSONObject(i));
-                    else if (obj.getJSONObject(i).getInt("semester") == 3 && B3)
-                        myList.add(obj.getJSONObject(i));
-                    else if (obj.getJSONObject(i).getInt("semester") == 4 && B4)
-                        myList.add(obj.getJSONObject(i));
-                    else if (obj.getJSONObject(i).getInt("semester") == 5 && B5)
-                        myList.add(obj.getJSONObject(i));
-                    else if (obj.getJSONObject(i).getInt("semester") == 6 && B6)
-                        myList.add(obj.getJSONObject(i));
-                    myAdapter.notifyDataSetChanged();
+        listDataHeader.add("Semester 0");
+        listDataHeader.add("Semester 1");
+        listDataHeader.add("Semester 2");
+        listDataHeader.add("Semester 3");
+        listDataHeader.add("Semester 4");
+        listDataHeader.add("Semester 5");
+        listDataHeader.add("Semester 6");
+
+        List<JSONObject> s0 = new ArrayList<>();
+        List<JSONObject> s1 = new ArrayList<>();
+        List<JSONObject> s2 = new ArrayList<>();
+        List<JSONObject> s3 = new ArrayList<>();
+        List<JSONObject> s4 = new ArrayList<>();
+        List<JSONObject> s5 = new ArrayList<>();
+        List<JSONObject> s6 = new ArrayList<>();
+
+        if (obj != null) {
+            for (int i = 0; i < obj.length(); i++) {
+                try {
+                    if (obj.getJSONObject(i) != null && obj.getJSONObject(i).has("semester")) {
+                        switch (obj.getJSONObject(i).getString("semester")) {
+                            case "0":
+                                s0.add(obj.getJSONObject(i));
+                                break;
+                            case "1":
+                                s1.add(obj.getJSONObject(i));
+                                break;
+                            case "2":
+                                s2.add(obj.getJSONObject(i));
+                                break;
+                            case "3":
+                                s3.add(obj.getJSONObject(i));
+                                break;
+                            case "4":
+                                s4.add(obj.getJSONObject(i));
+                                break;
+                            case "5":
+                                s5.add(obj.getJSONObject(i));
+                                break;
+                            case "6":
+                                s6.add(obj.getJSONObject(i));
+                                break;
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
         }
-        list.setAdapter(myAdapter);
+
+        listDataChild.put(listDataHeader.get(0), s0);
+        listDataChild.put(listDataHeader.get(1), s1);
+        listDataChild.put(listDataHeader.get(2), s2);
+        listDataChild.put(listDataHeader.get(3), s3);
+        listDataChild.put(listDataHeader.get(4), s4);
+        listDataChild.put(listDataHeader.get(5), s5);
+        listDataChild.put(listDataHeader.get(6), s6);
     }
 
     public void makeRequestProjects()
@@ -166,11 +130,13 @@ public class AllModuleFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            obj = response.getJSONArray("items");
+                            prepareListData(response.getJSONArray("items"));
+                            listAdapter = new ExpandableListAdapter(C.getContext(), listDataHeader,
+                                    listDataChild, user);
+                            expListView.setAdapter(listAdapter);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        setUpViewProject();
                         toto.dismiss();
                     }
                 },

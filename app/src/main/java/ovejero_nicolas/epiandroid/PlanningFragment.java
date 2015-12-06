@@ -140,6 +140,7 @@ public class PlanningFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final activityItem tmp = _activityList.get(position);
                 if (!tmp.errors) {
+
                     AlertDialog.Builder searchDialog = new AlertDialog.Builder(_view.getContext());
                     LayoutInflater inflater = getActivity().getLayoutInflater();
                     searchDialog.setTitle(tmp.titlemodule);

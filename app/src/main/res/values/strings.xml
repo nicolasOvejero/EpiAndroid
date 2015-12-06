@@ -59,4 +59,6 @@
     <string name="token">Token : </string>
     <string name="validate">OK</string>
     <string name="module_valid">Ce modules est déja validé !</string>
+    <string name="credits">Credits : </string>
+    <string name="grade">Grade : </string>
 </resources>
