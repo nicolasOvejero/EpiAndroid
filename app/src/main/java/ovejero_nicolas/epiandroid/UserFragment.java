@@ -81,8 +81,6 @@ public class UserFragment extends Fragment  {
 
     private void setUpViewProject(int limit) {
         listProject = (ListView)C.findViewById(R.id.listProject);
-        itemProject = new ArrayList<>();
-        itemProject.clear();
 
         int all = 0;
 

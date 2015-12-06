@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.Switch;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -22,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AllModuleFragment extends Fragment {
     private View C;
@@ -123,39 +125,34 @@ public class AllModuleFragment extends Fragment {
 
     private void setUpViewProject() {
         ListView list = (ListView) C.findViewById(R.id.allmodules);
-        ArrayList<String> item = new ArrayList<>();
-        item.clear();
-        modulesAdapter adapter = new modulesAdapter(C.getContext(), obj);
-        int all = 0;
+        List<JSONObject> myList = new ArrayList<>();
+        modulesAdapter myAdapter = new modulesAdapter(C.getContext(), R.layout.row_modules, myList, user);
 
         for (int i = 0; i < obj.length(); i++) {
             try {
                 if (obj.getJSONObject(i) != null)
                 {
                     if (obj.getJSONObject(i).getInt("semester") == 0 && B0)
-                        adapter.setB0(true);
+                        myList.add(obj.getJSONObject(i));
                     else if (obj.getJSONObject(i).getInt("semester") == 1 && B1)
-                        adapter.setB1(true);
+                        myList.add(obj.getJSONObject(i));
                     else if (obj.getJSONObject(i).getInt("semester") == 2 && B2)
-                        adapter.setB2(true);
+                        myList.add(obj.getJSONObject(i));
                     else if (obj.getJSONObject(i).getInt("semester") == 3 && B3)
-                        adapter.setB3(true);
+                        myList.add(obj.getJSONObject(i));
                     else if (obj.getJSONObject(i).getInt("semester") == 4 && B4)
-                        adapter.setB4(true);
+                        myList.add(obj.getJSONObject(i));
                     else if (obj.getJSONObject(i).getInt("semester") == 5 && B5)
-                        adapter.setB5(true);
+                        myList.add(obj.getJSONObject(i));
                     else if (obj.getJSONObject(i).getInt("semester") == 6 && B6)
-                        adapter.setB6(true);
-                    else
-                        all--;
+                        myList.add(obj.getJSONObject(i));
+                    myAdapter.notifyDataSetChanged();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            all++;
         }
-        adapter.setCount(all);
-        list.setAdapter(adapter);
+        list.setAdapter(myAdapter);
     }
 
     public void makeRequestProjects()

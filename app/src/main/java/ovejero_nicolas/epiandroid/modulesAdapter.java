@@ -1,50 +1,47 @@
 package ovejero_nicolas.epiandroid;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.text.style.LineHeightSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ProgressBar;
+import android.widget.ArrayAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import org.json.JSONArray;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
 import org.json.JSONException;
+import org.json.JSONObject;
 
-public class modulesAdapter extends BaseAdapter {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import cz.msebera.android.httpclient.Header;
+
+public class modulesAdapter extends ArrayAdapter<JSONObject> {
     Context context;
-    JSONArray modules;
-    int nb;
+    List<JSONObject> obj;
+    private int resourceId;
     private static LayoutInflater inflater = null;
-    private boolean b0, b1, b2, b3, b4, b5, b6;
+    private UserClass user;
 
-    public modulesAdapter(Context context, JSONArray modules) {
+    public modulesAdapter(Context context, int resourceId, List<JSONObject> objects, UserClass user) {
+        super(context, resourceId, objects);
         this.context = context;
-        this.modules = modules;
-        b0 = false;
-        b1 = false;
-        b2 = false;
-        b3 = false;
-        b4 = false;
-        b5 = false;
-        b6 = false;
+        this.obj = objects;
+        this.user = user;
+        this.resourceId = resourceId;
+
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-
-    @Override
-    public int getCount() {
-        return nb;
-    }
-
-    public void setCount(int nb) {
-        this.nb = nb;
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return null;
     }
 
     @Override
@@ -52,92 +49,148 @@ public class modulesAdapter extends BaseAdapter {
         return position;
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View vi = convertView;
-        if (vi == null)
-            vi = inflater.inflate(R.layout.row_modules  , null);
-        TextView code = (TextView) vi.findViewById(R.id.code);
-        TextView title = (TextView) vi.findViewById(R.id.title);
-        TextView begin = (TextView) vi.findViewById(R.id.begin);
-        TextView end = (TextView) vi.findViewById(R.id.end);
-        Switch status = (Switch) vi.findViewById(R.id.status);
+    private void subscribe(final JSONObject obj, View v) {
+        RequestQueue queue = MySingleton.getInstance(v.getContext()).getRequestQueue();
+        final ProgressDialog pd = ProgressDialog.show(v.getContext(), "Chargement...", "Merci de patienter.");
 
+        final Switch status = (Switch) v.findViewById(R.id.status);
+
+        StringRequest sr = new StringRequest(Request.Method.POST,
+                "http://epitech-api.herokuapp.com/module", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (status.isChecked())
+                {
+                    status.setText("You are registered");
+                    status.setChecked(true);
+                }
+                pd.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("ko " + error);
+                pd.dismiss();
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                try {
+                    params.put("token", user.getToken());
+                    params.put("scolaryear", obj.getString("scolaryear"));
+                    params.put("codemodule", obj.getString("code"));
+                    params.put("codeinstance", obj.getString("codeinstance"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return params;
+            }
+        };
+        MySingleton.getInstance(v.getContext()).addToRequestQueue(sr);
+    }
+
+    private void unsubscribe(final JSONObject obj, View v) {
+        final ProgressDialog pd = ProgressDialog.show(v.getContext(), "Chargement...", "Merci de patienter.");
+
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        RequestParams toto = new RequestParams();
         try {
-            if (modules.getJSONObject(position).getInt("semester") == 0 && b0) {
-                code.setText(modules.getJSONObject(position).getString("code"));
-                title.setText(modules.getJSONObject(position).getString("title"));
-                begin.setText(modules.getJSONObject(position).getString("begin"));
-                end.setText(modules.getJSONObject(position).getString("end"));
-            }
-            else if (modules.getJSONObject(position).getInt("semester") == 1 && b1) {
-                code.setText(modules.getJSONObject(position).getString("code"));
-                title.setText(modules.getJSONObject(position).getString("title"));
-                begin.setText(modules.getJSONObject(position).getString("begin"));
-                end.setText(modules.getJSONObject(position).getString("end"));
-            }
-            else if (modules.getJSONObject(position).getInt("semester") == 2 && b2) {
-                code.setText(modules.getJSONObject(position).getString("code"));
-                title.setText(modules.getJSONObject(position).getString("title"));
-                begin.setText(modules.getJSONObject(position).getString("begin"));
-                end.setText(modules.getJSONObject(position).getString("end"));
-            }
-            else if (modules.getJSONObject(position).getInt("semester") == 3 && b3) {
-                code.setText(modules.getJSONObject(position).getString("code"));
-                title.setText(modules.getJSONObject(position).getString("title"));
-                begin.setText(modules.getJSONObject(position).getString("begin"));
-                end.setText(modules.getJSONObject(position).getString("end"));
-            }
-            else if (modules.getJSONObject(position).getInt("semester") == 4 && b4) {
-                code.setText(modules.getJSONObject(position).getString("code"));
-                title.setText(modules.getJSONObject(position).getString("title"));
-                begin.setText(modules.getJSONObject(position).getString("begin"));
-                end.setText(modules.getJSONObject(position).getString("end"));
-            }
-            else if (modules.getJSONObject(position).getInt("semester") == 5 && b5) {
-                code.setText(modules.getJSONObject(position).getString("code"));
-                title.setText(modules.getJSONObject(position).getString("title"));
-                begin.setText(modules.getJSONObject(position).getString("begin"));
-                end.setText(modules.getJSONObject(position).getString("end"));
-            }
-            else if (modules.getJSONObject(position).getInt("semester") == 6 && b6) {
-                code.setText(modules.getJSONObject(position).getString("code"));
-                title.setText(modules.getJSONObject(position).getString("title"));
-                begin.setText(modules.getJSONObject(position).getString("begin"));
-                end.setText(modules.getJSONObject(position).getString("end"));
-            }
-
+            toto.put("token", user.getToken());
+            toto.put("scolaryear", obj.getString("scolaryear"));
+            toto.put("codemodule", obj.getString("code"));
+            toto.put("codeinstance", obj.getString("codeinstance"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return vi;
+
+        final Switch status = (Switch) v.findViewById(R.id.status);
+
+        client.delete("http://epitech-api.herokuapp.com/module", toto, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if (statusCode == 200)
+                {
+                    if (!status.isChecked())
+                    {
+                        status.setText("You are not registered");
+                        status.setChecked(false);
+                    }
+                }
+                pd.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                pd.dismiss();
+            }
+        });
     }
 
-    public void setB0(boolean b0) {
-        this.b0 = b0;
-    }
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View v = convertView;
 
-    public void setB1(boolean b1) {
-        this.b1 = b1;
-    }
+        if (v == null) {
+            LayoutInflater vi;
+            vi = LayoutInflater.from(getContext());
+            v = vi.inflate(R.layout.row_modules, null);
+        }
 
-    public void setB2(boolean b2) {
-        this.b2 = b2;
-    }
+        final JSONObject item = getItem(position);
 
-    public void setB3(boolean b3) {
-        this.b3 = b3;
-    }
+        TextView title = (TextView) v.findViewById(R.id.title);
+        TextView begin = (TextView) v.findViewById(R.id.begin);
+        TextView end = (TextView) v.findViewById(R.id.end);
+        final Switch status = (Switch) v.findViewById(R.id.status);
+        TextView valid = (TextView) v.findViewById(R.id.valid);
 
-    public void setB4(boolean b4) {
-        this.b4 = b4;
-    }
+        status.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (status.isChecked())
+                        subscribe(item, v);
+                    else
+                        unsubscribe(item, v);
+                }
+            });
 
-    public void setB5(boolean b5) {
-        this.b5 = b5;
-    }
-
-    public void setB6(boolean b6) {
-        this.b6 = b6;
+        try {
+            title.setText(item.getString("title"));
+            begin.setText("From : " + item.getString("begin"));
+            end.setText("To : " + item.getString("end"));
+            if (item.has("status")) {
+                if (item.getString("status").equals("valid"))
+                    status.setVisibility(View.GONE);
+                else if (item.getString("status").equals("notregistered")) {
+                    status.setText("You are not registered");
+                    status.setChecked(false);
+                    valid.setVisibility(View.GONE);
+                    status.setVisibility(View.VISIBLE);
+                } else {
+                    status.setText("You are registered");
+                    status.setChecked(true);
+                    valid.setVisibility(View.GONE);
+                    status.setVisibility(View.VISIBLE);
+                }
+            }
+            else if (item.has("rights")) {
+                String all = "";
+                for (int i = 0; i < item.getJSONArray("rights").length(); i++) {
+                    if ((item.getJSONArray("rights").getString(i)).equals("assistant") ||
+                            (item.getJSONArray("rights").getString(i)).equals("prof_inst"))
+                        all += item.getJSONArray("rights").getString(i) + "\n";
+                }
+                status.setVisibility(View.GONE);
+                valid.setText(all);
+                valid.setVisibility(View.VISIBLE);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return v;
     }
 }
