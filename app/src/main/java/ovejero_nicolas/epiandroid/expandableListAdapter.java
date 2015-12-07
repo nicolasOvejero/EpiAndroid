@@ -91,7 +91,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
                 return params;
             }
         };

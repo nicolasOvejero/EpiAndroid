@@ -2,6 +2,8 @@ package ovejero_nicolas.epiandroid;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +80,7 @@ public class ExpandableListAdapterProject extends BaseExpandableListAdapter {
                 RequestQueue queue = MySingleton.getInstance(v.getContext()).getRequestQueue();
                 final ProgressDialog pd = ProgressDialog.show(v.getContext(), "Chargement...", "Merci de patienter.");
 
+
                 StringRequest sr = new StringRequest(Request.Method.POST,
                         "http://epitech-api.herokuapp.com/project", new Response.Listener<String>() {
                     @Override
@@ -129,6 +132,11 @@ public class ExpandableListAdapterProject extends BaseExpandableListAdapter {
             e.printStackTrace();
         }
         return convertView;
+    }
+
+    @Override
+    public void registerDataSetObserver(DataSetObserver observer) {
+        super.registerDataSetObserver(observer);
     }
 
     @Override

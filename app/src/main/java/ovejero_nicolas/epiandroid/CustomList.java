@@ -16,14 +16,17 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CustomList extends BaseAdapter  {
     Context context;
-    private final String[] text;
-    private final String[] url;
+    private final ArrayList<String> text;
+    private final ArrayList<String> url;
     private static LayoutInflater inflater = null;
 
     public CustomList(Context context,
-                      String[] text, String[] url) {
+                      ArrayList<String> text, ArrayList<String> url) {
         this.context = context;
         this.text = text;
         this.url = url;
@@ -32,7 +35,7 @@ public class CustomList extends BaseAdapter  {
 
     @Override
     public int getCount() {
-        return url.length;
+        return url.size();
     }
 
     @Override
@@ -53,9 +56,9 @@ public class CustomList extends BaseAdapter  {
 
         TextView txtTitle = (TextView) vi.findViewById(R.id.txt);
 
-        txtTitle.setText(text[position]);
+        txtTitle.setText(text.get(position));
 
-        Picasso.with(context).load(url[position]).into((ImageView) vi.findViewById(R.id.img));
+        Picasso.with(context).load(url.get(position)).into((ImageView) vi.findViewById(R.id.img));
         return vi;
     }
 }

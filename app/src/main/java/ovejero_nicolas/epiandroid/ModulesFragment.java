@@ -2,16 +2,12 @@ package ovejero_nicolas.epiandroid;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -78,10 +74,10 @@ public class ModulesFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-                new AlertDialog.Builder(C.getContext())
-                        .setTitle("Marks : ")
-                        .setMessage((all.equals("") ? "No marks for this module !" : all))
-                        .show();
+                AlertDialog.Builder ad = new AlertDialog.Builder(C.getContext())
+                                    .setTitle("Marks : ")
+                                    .setMessage((all.equals("") ? "No marks for this module !" : all));
+                ad.show();
                 return false;
             }
 
