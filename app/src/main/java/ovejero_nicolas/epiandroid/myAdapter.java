@@ -46,6 +46,7 @@ public class myAdapter extends BaseAdapter {
         View vi = convertView;
         if (vi == null)
             vi = inflater.inflate(R.layout.row, null);
+
         TextView text = (TextView) vi.findViewById(R.id.text);
         TextView from = (TextView) vi.findViewById(R.id.from);
         ProgressBar pgb = (ProgressBar) vi.findViewById(R.id.progressBar);

@@ -36,10 +36,8 @@ public class UserFragment extends Fragment  {
     private ListView listProject;
     private ListView ListNote;
     private ListView historyList;
-    private ArrayList<String> itemProject;
     private ArrayList<String> itemNote;
     private ArrayList<String> itemHistory;
-    private ArrayAdapter<String> itemAdapterModule;
     private ArrayAdapter<String> itemAdapterNote;
     private ArrayAdapter<String> itemAdapterHistory;
     private UserClass user;
