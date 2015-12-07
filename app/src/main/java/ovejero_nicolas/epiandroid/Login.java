@@ -74,8 +74,6 @@ public class Login extends AppCompatActivity {
         EditText pass = (EditText) findViewById(R.id.PassInput);
         login = logint.getText().toString();
         password = pass.getText().toString();
-        login = "ovejer_n";
-        password = "n1JjiJYN";
         makeRequestLogin("login?login=" + login + "&password=" + password);
     }
 }
